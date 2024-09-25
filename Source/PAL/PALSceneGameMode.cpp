@@ -31,6 +31,7 @@ APALSceneGameMode::APALSceneGameMode() : Super()
 	bLoadRoleSprites = false;
 	MainPlayerStatePrivate = nullptr;
 	ScreenWaveProgression = 0;
+	AccumulatedScreenWaveProgression = 0;
 	bScreenWaving = false;
 	bScreenShaking = false;
 }
@@ -202,6 +203,9 @@ void APALSceneGameMode::WaveScreen(uint32 ScreenWave, float InScreenWaveProgress
 		{
 			ScreenWaver = GetWorld()->SpawnActor<APALScreenWaver>();
 		}
+		ScreenWaver->SetLevel(ScreenWave);
+	} else {
+		StopScreenWave();
 	}
 }
 
@@ -209,6 +213,7 @@ void APALSceneGameMode::StopScreenWave()
 {
 	Cast<APALGameState>(GameState)->GetGameStateData()->ScreenWave = 0;
 	ScreenWaveProgression = 0;
+	AccumulatedScreenWaveProgression = 0;
 	bScreenWaving = false;
 	for (TActorIterator<APALScreenWaver> It(GetWorld(), APALScreenWaver::StaticClass()); It; ++It)
 	{
@@ -276,7 +281,19 @@ void APALSceneGameMode::ScreenEffects(const float DeltaTime)
 	}
 	else
 	{
-		GameStateData->ScreenWave += FMath::CeilToInt32(ScreenWaveProgression * DeltaTime);
+		AccumulatedScreenWaveProgression += ScreenWaveProgression * DeltaTime;
+		if (static_cast<int32>(AccumulatedScreenWaveProgression) != 0) {
+			GameStateData->ScreenWave += static_cast<int32>(AccumulatedScreenWaveProgression);
+			AccumulatedScreenWaveProgression -= static_cast<int32>(AccumulatedScreenWaveProgression);
+			for (TActorIterator<APALScreenWaver> It(GetWorld(), APALScreenWaver::StaticClass()); It; ++It)
+			{
+				if ((*It)->IsValidLowLevel())
+				{
+					(*It)->SetLevel(GameStateData->ScreenWave);
+					break;
+				}
+			}
+		}
 	}
 
 	if (bScreenShaking)

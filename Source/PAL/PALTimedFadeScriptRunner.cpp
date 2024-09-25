@@ -6,7 +6,7 @@
 
 void APALTimedFadeScriptRunner::Init(bool bInFadeInOrOut, float InDelayTime)
 {
-	EndWaitTime = GetWorld()->GetTimeSeconds() + bInFadeInOrOut ? DelayTime : (DelayTime / 2);
+	EndWaitTime = GetWorld()->GetTimeSeconds() + (bInFadeInOrOut ? DelayTime : (DelayTime / 2));
 	bFadeInOrOut = bInFadeInOrOut;
 	DelayTime = InDelayTime;
 	bStarted = false;

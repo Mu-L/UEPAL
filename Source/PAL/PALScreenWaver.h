@@ -17,4 +17,11 @@ class PAL_API APALScreenWaver : public APostProcessVolume
 public:
 	APALScreenWaver();
 
+private:
+	UPROPERTY()
+	UMaterialInstanceDynamic* ScreenWaveMaterialInstance;
+
+public:
+	void SetLevel(uint32 Level);
+
 };

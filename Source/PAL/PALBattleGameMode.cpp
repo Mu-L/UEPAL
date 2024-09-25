@@ -410,9 +410,25 @@ void APALBattleGameMode::BattleCommitAction(bool bRepeat)
 	MainPlayerControllerPrivate->BattleUIWait();
 }
 
+
+
 void APALBattleGameMode::BattleRolePerformAction(SIZE_T RoleId)
 {
+	CurrentMovingRoleId = RoleId;
+	// g_Battle.iBlow = 0;
 
+	FBattleRole& CurrentRole = *BattleRoleMap.Find(RoleId);
+	int16 OriginalTarget = CurrentRole.Action.Target;
+	BattleRoleValidateAction(RoleId);
+	BattleBackupStat();
+
+	int16 Target = CurrentRole.Action.Target;
+
+	// TODO
+}
+
+void APALBattleGameMode::BattleRoleValidateAction(SIZE_T RoleId)
+{
 }
 
 void APALBattleGameMode::BattleRoleCheckReady()
@@ -599,7 +615,7 @@ void APALBattleGameMode::Tick(float DeltaTime)
 					continue;
 				}
 
-				// Start the menu for the first player whose action is not
+				// Start the menu for the first role whose action is not
 				// yet selected
 				if (BattleRoleMap.Find(RoleId)->State == EPALFighterState::Waiting)
 				{
@@ -611,7 +627,7 @@ void APALBattleGameMode::Tick(float DeltaTime)
 				}
 				else if (BattleRoleMap.Find(RoleId)->Action.ActionType == EBattleActionType::BattleActionCoopMagic)
 				{
-					// Skip other players if someone selected coopmagic
+					// Skip other roles if someone selected coopmagic
 					break;
 				}
 			}
@@ -679,7 +695,7 @@ void APALBattleGameMode::Tick(float DeltaTime)
 						PlayerStateData->RoleStatus[RoleId][EPALStatus::Sleep] > 0 ||
 						PlayerStateData->RoleStatus[RoleId][EPALStatus::Paralyzed] > 0)
 					{
-						// players who are unable to move should attack physically if recovered
+						// roles who are unable to move should attack physically if recovered
 						// in the same turn
 						Action.Dexterity = 0;
 						BattleRoleMap.Find(RoleId)->Action.ActionType = EBattleActionType::BattleActionAttack;

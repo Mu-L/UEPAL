@@ -9,7 +9,7 @@
 #include "PALScenePlayerController.h"
 #include "PALMapManager.h"
 
-constexpr float DefaultSpeed = 24 * PIXEL_TO_UNIT / FRAME_TIME;
+constexpr float DefaultSpeed = 32 / 1.414213f * PIXEL_TO_UNIT / FRAME_TIME;
 
 // Sets default values
 APALRolePawn::APALRolePawn()

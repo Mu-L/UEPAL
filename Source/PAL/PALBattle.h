@@ -4,7 +4,7 @@
 
 constexpr float BATTLE_FRAME_TIME = 0.04f;
 
-static uint16
+static int16
 CalculateBaseDamage(uint16 Strength, uint16 Defense)
 {
 	int16 Damage;
@@ -23,5 +23,16 @@ CalculateBaseDamage(uint16 Strength, uint16 Defense)
 		Damage = 0;
 	}
 
+	return Damage;
+}
+
+static int16
+CalculatePhysicalAttackDamage(uint16 AttackStrength, uint16 Defense, uint16 AttackResistance)
+{
+	int16 Damage = CalculateBaseDamage(AttackStrength, Defense);
+	if (AttackResistance != 0)
+	{
+		Damage /= AttackResistance;
+	}
 	return Damage;
 }

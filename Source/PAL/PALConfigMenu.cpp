@@ -48,11 +48,20 @@ void UPALConfigMenu::SelectGameResourcePath()
 
 void UPALConfigMenu::StartGame()
 {
-	if (GameResourcePathText) {
-		GetGameInstance<UPALGameInstance>()->SetGameResourcePath(GameResourcePathText->GetText().ToString());
-		GetGameInstance<UPALGameInstance>()->InitGameData();
+	if (GameResourcePathText)
+	{
+		FString GameResourcePath = GameResourcePathText->GetText().ToString();
+		if (FPaths::DirectoryExists(GameResourcePath))
+		{
+			GetGameInstance<UPALGameInstance>()->SetGameResourcePath(GameResourcePathText->GetText().ToString());
+			GetGameInstance<UPALGameInstance>()->InitGameData();
+			UGameplayStatics::OpenLevel(this, TEXT("PAL_Opening"));
+		}
+		else 
+		{
+			GameResourcePathErrorText->SetText(FText::FromString(FString(TEXT("Directory ")) + FPaths::ConvertRelativePathToFull(GameResourcePath) + FString(TEXT(" doesn't exist."))));
+		}
 	}
-	UGameplayStatics::OpenLevel(this, TEXT("PAL_Opening"));
 }
 
 UWidget* UPALConfigMenu::BuildMenuLabel(FText Text)
@@ -99,6 +108,8 @@ void UPALConfigMenu::NativeConstruct()
 	Grid->AddChildToGrid(BuildMenuLabel(FText::FromString("Game resource path")), 0, 0);
 	UHorizontalBox* GameResourcePathSelectionBox = WidgetTree->ConstructWidget<UHorizontalBox>(UHorizontalBox::StaticClass());
 	Grid->AddChildToGrid(GameResourcePathSelectionBox, 0, 1);
+	GameResourcePathErrorText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
+	Grid->AddChildToGrid(GameResourcePathErrorText, 1, 1);
 	GameResourcePathText = WidgetTree->ConstructWidget<UEditableText>(UEditableText::StaticClass());
 	GameResourcePathText->SetText(FText::FromString("C:\\Users\\wwrus\\Desktop\\PAL98"));
 	UHorizontalBoxSlot* GameResourcePathTextSlot = GameResourcePathSelectionBox->AddChildToHorizontalBox(GameResourcePathText);

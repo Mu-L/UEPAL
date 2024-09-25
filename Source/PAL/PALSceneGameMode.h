@@ -37,6 +37,8 @@ private:
 
 	float ScreenWaveProgression;
 
+	float AccumulatedScreenWaveProgression;
+
 	bool bScreenShaking;
 
 	float ScreenShakeEndTime;

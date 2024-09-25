@@ -119,6 +119,8 @@ private:
 
 	void BattleRolePerformAction(SIZE_T RoleId);
 
+	void BattleRoleValidateAction(SIZE_T RoleId);
+
 	void BattleRoleCheckReady();
 
 	void DrawScreenMessage();

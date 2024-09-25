@@ -97,7 +97,7 @@ void APALBattlePlayerController::SetAutoAttack(bool bInAutoAttack)
 				AutoAttackMessage->RemoveFromParent();
 			}
 		}
-		bAutoAttack = bAutoAttack;
+		bAutoAttack = bInAutoAttack;
 	}
 }
 

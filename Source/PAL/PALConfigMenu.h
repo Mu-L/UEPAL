@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/EditableText.h"
+#include "Components/TextBlock.h"
 #include "PALConfigMenu.generated.h"
 
 /**
@@ -17,6 +18,8 @@ class PAL_API UPALConfigMenu : public UUserWidget
 
 private:
 	UEditableText* GameResourcePathText;
+
+	UTextBlock* GameResourcePathErrorText;
 
 public:
 	UFUNCTION()
